@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform Player;  // Karakter nesnesinin Transform bileşeni
+    public Transform CharacterTransform;
+    public Transform CameraFollow;  // Karakter nesnesinin Transform bileşeni
     public Transform Camera;  // Kamera nesnesinin Transform bileşeni
     public Vector3 CameraOffset = new Vector3(0f, 2f, -5f);  // Kamera offset değeri
     public float CameraSpeed = 2f;  // Kamera hareket hızı
@@ -22,7 +23,7 @@ public class CameraController : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(0))
         {
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
@@ -32,10 +33,27 @@ public class CameraController : MonoBehaviour
             
             _cameraRotationY = Mathf.Clamp(_cameraRotationY, _minYAngle, _maxYAngle);
         }
-
+        
         Quaternion cameraRotation = Quaternion.Euler(_cameraRotationY, _cameraRotationX, 0f);
         Vector3 cameraOffsetPosition = cameraRotation * CameraOffset;
-        Camera.position = Player.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
-        Camera.LookAt(Player.position);
+        
+        if(Input.GetMouseButton(1))
+        {
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            _cameraRotationX += mouseX;
+            _cameraRotationY -= mouseY;
+
+            _cameraRotationY = Mathf.Clamp(_cameraRotationY, _minYAngle, _maxYAngle);
+
+            Camera.position = CameraFollow.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
+            Camera.LookAt(CameraFollow.position);
+
+            CharacterTransform.rotation = Quaternion.Euler(0f, _cameraRotationX, 0f);
+        }
+        
+        Camera.position = CameraFollow.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
+        Camera.LookAt(CameraFollow.position);
     }
 }
