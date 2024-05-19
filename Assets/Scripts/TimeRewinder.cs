@@ -39,7 +39,7 @@ public class TimeRewinder : MonoBehaviour
 
         if(_points.Count > 0 && IsRewinding)
         {
-            //Camera.main.transform.DOShakeRotation(0.2f, 0.3f, 1, 34, false);
+            Camera.main.transform.DOShakeRotation(0.1f, 0.3f, 1, 1, false);
         }
 
         if (IsRewinding)

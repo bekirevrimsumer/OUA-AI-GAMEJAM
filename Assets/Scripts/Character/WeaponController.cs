@@ -46,6 +46,7 @@ public class WeaponController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.F) && _selectedNpc != null)
         {
             _animator.SetTrigger("Shoot");
+            SoundManager.Instance.PlaySound(SoundManager.Instance.GunShotSound, transform.position, 0.5f);
             _selectedNpc.GetComponent<Outline>().enabled = false;
             var npcState = _selectedNpc.GetComponent<NPCState>();
             if(npcState.IsOutlaw)
@@ -56,6 +57,7 @@ public class WeaponController : MonoBehaviour
             {
                 npcState.Die();
             }
+
             _selectedNpc = null;
         }
 
@@ -79,7 +81,7 @@ public class WeaponController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
             {
                 Debug.Log(hit.collider.name);
                 if (hit.collider.CompareTag("Enemy"))
@@ -87,6 +89,7 @@ public class WeaponController : MonoBehaviour
                     if(_selectedNpc != null)
                         _selectedNpc.GetComponent<Outline>().enabled = false;
 
+                    SoundManager.Instance.PlaySound(SoundManager.Instance.AimSound, transform.position);
                     _selectedNpc = hit.collider.gameObject;
                     hit.collider.GetComponent<Outline>().enabled = true;
                 }

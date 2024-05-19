@@ -8,7 +8,8 @@ public class NPCMovement : MonoBehaviour
     public float MoveSpeed = 3f;
     
     private bool _isWandering = false;
-    private float _minX = -33, _maxX = 11, _minZ = -27, _maxZ = 18;
+    private float _minX = 183, _maxX = 199, _minZ = 215, _maxZ = 243;
+    private float _minX2 = 207, _maxX2 = 236, _minZ2 = 208, _maxZ2 = 218;
     private NavMeshAgent _navMeshAgent;
     private Animator _animator;
     TimeRewinder _timeRewinder;
@@ -49,17 +50,25 @@ public class NPCMovement : MonoBehaviour
 
     private Vector3 RandomPoint()
     {
-        float x = Random.Range(_minX, _maxX);
-        float z = Random.Range(_minZ, _maxZ);
-        Vector3 randomPoint = new Vector3(x, 0, z);
-        return randomPoint;
+        var random = Random.Range(0, 2);
+        if(random == 0)
+        {
+            float x = Random.Range(_minX, _maxX);
+            float z = Random.Range(_minZ, _maxZ);
+            Vector3 randomPoint = new Vector3(x, 0, z);
+            return randomPoint;
+        }
+        else
+        {
+            float x = Random.Range(_minX2, _maxX2);
+            float z = Random.Range(_minZ2, _maxZ2);
+            Vector3 randomPoint = new Vector3(x, 0, z);
+            return randomPoint;
+        }
     }
 
     IEnumerator Wander()
     {
-        if(_npcState.IsDead)
-            yield break;
-
         _isWandering = true;
         int walkWait = Random.Range(1, 5);
         int walkTime = Random.Range(1, 6);
