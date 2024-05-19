@@ -7,7 +7,7 @@ public class WeaponController : MonoBehaviour
 {
     Animator _animator;
     public Transform WeaponTransform;
-    public Transform RaycastOrigin;
+    private GameObject _selectedNpc;
 
     private void Start()
     {
@@ -18,42 +18,78 @@ public class WeaponController : MonoBehaviour
     {
         var isAim = _animator.GetBool("IsAim");
 
-        if (Input.GetMouseButtonDown(1))
+        // if (Input.GetMouseButtonDown(1))
+        // {
+        //     _animator.SetBool("IsAim", true);
+        //     WeaponTransform.gameObject.SetActive(true);
+        // }
+        // if(Input.GetMouseButtonUp(1))
+        // {
+        //     _animator.SetBool("IsAim", false);
+        //     WeaponTransform.gameObject.SetActive(false);
+        // }
+
+        // if (Input.GetMouseButtonDown(0) && isAim)
+        // {
+        //     _animator.SetTrigger("Shoot");
+        // }
+
+        if(_selectedNpc != null)
         {
             _animator.SetBool("IsAim", true);
-            WeaponTransform.gameObject.SetActive(true);
         }
-        if(Input.GetMouseButtonUp(1))
+        else
         {
             _animator.SetBool("IsAim", false);
-            WeaponTransform.gameObject.SetActive(false);
         }
 
-        if (Input.GetMouseButtonDown(0) && isAim)
+        if(Input.GetKeyDown(KeyCode.F) && _selectedNpc != null)
         {
             _animator.SetTrigger("Shoot");
+            _selectedNpc.GetComponent<Outline>().enabled = false;
+            var npcState = _selectedNpc.GetComponent<NPCState>();
+            if(npcState.IsOutlaw)
+            {
+                npcState.Die();
+            }
+            else
+            {
+                npcState.Die();
+            }
+            _selectedNpc = null;
         }
 
-        //raycast ile ateş etme işlemi
-        if (isAim)
+        if(Input.GetKeyDown(KeyCode.Escape) && _selectedNpc != null)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(RaycastOrigin.position, RaycastOrigin.forward, out hit, 100, LayerMask.GetMask("Enemy")))
-            {
-                Debug.DrawLine(RaycastOrigin.position, hit.point, Color.red);
-                Debug.Log(hit.transform.name);
-                if(hit.transform.CompareTag("Enemy"))
-                {
-                    hit.transform.GetComponent<Outline>().enabled = true;
-                }
+            _animator.SetBool("IsAim", false);
+            _selectedNpc.GetComponent<Outline>().enabled = false;
+            _selectedNpc = null;
+        }
 
-                DOVirtual.DelayedCall(1f, () =>
+        if(isAim)
+        {
+            if(_selectedNpc != null)
+            {
+                Vector3 direction = _selectedNpc.transform.position - transform.position;
+                Quaternion rotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 10f * Time.deltaTime);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            {
+                Debug.Log(hit.collider.name);
+                if (hit.collider.CompareTag("Enemy"))
                 {
-                    if(hit.transform.CompareTag("Enemy"))
-                    {
-                        hit.transform.GetComponent<Outline>().enabled = false;
-                    }
-                });
+                    if(_selectedNpc != null)
+                        _selectedNpc.GetComponent<Outline>().enabled = false;
+
+                    _selectedNpc = hit.collider.gameObject;
+                    hit.collider.GetComponent<Outline>().enabled = true;
+                }
             }
         }
     }

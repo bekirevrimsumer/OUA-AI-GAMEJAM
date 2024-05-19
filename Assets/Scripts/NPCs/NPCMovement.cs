@@ -13,6 +13,7 @@ public class NPCMovement : MonoBehaviour
     private Animator _animator;
     TimeRewinder _timeRewinder;
     Coroutine _wanderCoroutine;
+    NPCState _npcState;
 
     void Start()
     {
@@ -20,10 +21,17 @@ public class NPCMovement : MonoBehaviour
         _animator = GetComponent<Animator>();
         _timeRewinder = GetComponent<TimeRewinder>();
         _wanderCoroutine = StartCoroutine(Wander());
+        _npcState = GetComponent<NPCState>();
     }
 
     private void Update() 
     {
+        if(_npcState.IsDead)
+        {
+            _navMeshAgent.isStopped = true;
+            StopCoroutine(_wanderCoroutine);
+            return;
+        }
         _animator.SetFloat("Speed", _navMeshAgent.velocity.magnitude);
 
         if (!_isWandering && !_timeRewinder.IsRewinding)
@@ -49,6 +57,9 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator Wander()
     {
+        if(_npcState.IsDead)
+            yield break;
+
         _isWandering = true;
         int walkWait = Random.Range(1, 5);
         int walkTime = Random.Range(1, 6);

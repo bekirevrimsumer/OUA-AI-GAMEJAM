@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(1))
         {
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
@@ -37,21 +37,21 @@ public class CameraController : MonoBehaviour
         Quaternion cameraRotation = Quaternion.Euler(_cameraRotationY, _cameraRotationX, 0f);
         Vector3 cameraOffsetPosition = cameraRotation * CameraOffset;
         
-        if(Input.GetMouseButton(1))
-        {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
+        // if(Input.GetMouseButton(0))
+        // {
+        //     float mouseX = Input.GetAxis("Mouse X");
+        //     float mouseY = Input.GetAxis("Mouse Y");
 
-            _cameraRotationX += mouseX;
-            _cameraRotationY -= mouseY;
+        //     _cameraRotationX += mouseX;
+        //     _cameraRotationY -= mouseY;
 
-            _cameraRotationY = Mathf.Clamp(_cameraRotationY, _minYAngle, _maxYAngle);
+        //     _cameraRotationY = Mathf.Clamp(_cameraRotationY, _minYAngle, _maxYAngle);
 
-            Camera.position = CameraFollow.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
-            Camera.LookAt(CameraFollow.position);
+        //     Camera.position = CameraFollow.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
+        //     Camera.LookAt(CameraFollow.position);
 
-            CharacterTransform.rotation = Quaternion.Euler(0f, _cameraRotationX, 0f);
-        }
+        //     CharacterTransform.rotation = Quaternion.Euler(0f, _cameraRotationX, 0f);
+        // }
         
         Camera.position = CameraFollow.position + cameraOffsetPosition + new Vector3(0f, 2f, 0f);
         Camera.LookAt(CameraFollow.position);

@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 8039555532094840782}
   - component: {fileID: 815652101106716722}
   - component: {fileID: 5999548775323712424}
+  - component: {fileID: 3523962018346693479}
   m_Layer: 3
   m_Name: NPC
   m_TagString: Enemy
@@ -454,7 +455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsRewinding: 0
-  RecordTime: 5
+  RecordTime: 3
   IsNpc: 1
   recordInterval: 0.5
   lastRecordTime: 0
@@ -491,7 +492,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.15, y: 2.08, z: 0.62}
+  m_Size: {x: 1.6, y: 2.8, z: 1.37}
   m_Center: {x: -0.012308598, y: 0.9354357, z: -0.019693375}
 --- !u!195 &815652101106716722
 NavMeshAgent:
@@ -502,7 +503,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1475799562258330676}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.28
   m_Speed: 2.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -511,7 +512,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 1.79
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -528,11 +529,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 0.8867924, g: 0.26352793, b: 0.26352793, a: 1}
+  outlineColor: {r: 0, g: 0.5552087, b: 1, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &3523962018346693479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1475799562258330676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9fa1a7fc86d86429a80b79ab2c768d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDead: 0
+  IsOutlaw: 1
 --- !u!1 &1570308793477824097
 GameObject:
   m_ObjectHideFlags: 0

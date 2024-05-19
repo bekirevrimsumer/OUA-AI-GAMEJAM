@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class TimeRewinder : MonoBehaviour
 {
     public bool IsRewinding = false;
-    public float RecordTime = 5f;
+    public float RecordTime = 3f;
     public bool IsNpc = false;
     public float recordInterval = 0.5f; // Kayıt aralığı
     public float lastRecordTime = 0; // Son kayıt zamanı
@@ -74,6 +74,12 @@ public class TimeRewinder : MonoBehaviour
             transform.position = point.Position;
             transform.rotation = point.Rotation;
             _anim.SetFloat("Speed", point.MoveSpeed);
+            
+            if(IsNpc && GetComponent<NPCState>().IsDead)
+            {
+                GetComponent<NPCState>().Rewind();
+            }
+
             _points.RemoveAt(0);
         }
         else
