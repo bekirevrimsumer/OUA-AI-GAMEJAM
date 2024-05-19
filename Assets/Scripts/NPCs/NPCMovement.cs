@@ -8,13 +8,15 @@ public class NPCMovement : MonoBehaviour
     public float MoveSpeed = 3f;
     
     private bool _isWandering = false;
-    private float _minX = 183, _maxX = 199, _minZ = 215, _maxZ = 243;
-    private float _minX2 = 207, _maxX2 = 236, _minZ2 = 208, _maxZ2 = 218;
+    private Vector2 _xRange1 = new Vector2(183, 199);
+    private Vector2 _zRange1 = new Vector2(215, 243);
+    private Vector2 _xRange2 = new Vector2(207, 236);
+    private Vector2 _zRange2 = new Vector2(208, 218);
     private NavMeshAgent _navMeshAgent;
     private Animator _animator;
-    TimeRewinder _timeRewinder;
-    Coroutine _wanderCoroutine;
-    NPCState _npcState;
+    private TimeRewinder _timeRewinder;
+    private Coroutine _wanderCoroutine;
+    private NPCState _npcState;
 
     void Start()
     {
@@ -27,12 +29,7 @@ public class NPCMovement : MonoBehaviour
 
     private void Update() 
     {
-        if(_npcState.IsDead)
-        {
-            _navMeshAgent.isStopped = true;
-            StopCoroutine(_wanderCoroutine);
-            return;
-        }
+        HandleNPCState();
         _animator.SetFloat("Speed", _navMeshAgent.velocity.magnitude);
 
         if (!_isWandering && !_timeRewinder.IsRewinding)
@@ -48,23 +45,30 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    private Vector3 RandomPoint()
+    private void HandleNPCState()
     {
-        var random = Random.Range(0, 2);
-        if(random == 0)
+        if(_npcState.IsDead)
         {
-            float x = Random.Range(_minX, _maxX);
-            float z = Random.Range(_minZ, _maxZ);
-            Vector3 randomPoint = new Vector3(x, 0, z);
-            return randomPoint;
+            _navMeshAgent.isStopped = true;
+            StopCoroutine(_wanderCoroutine);
         }
         else
         {
-            float x = Random.Range(_minX2, _maxX2);
-            float z = Random.Range(_minZ2, _maxZ2);
-            Vector3 randomPoint = new Vector3(x, 0, z);
-            return randomPoint;
+            _navMeshAgent.isStopped = false;
         }
+    }
+
+    private Vector3 RandomPoint()
+    {
+        var random = Random.Range(0, 2);
+        return random == 0 ? GenerateRandomPoint(_xRange1, _zRange1) : GenerateRandomPoint(_xRange2, _zRange2);
+    }
+
+    private Vector3 GenerateRandomPoint(Vector2 xRange, Vector2 zRange)
+    {
+        float x = Random.Range(xRange.x, xRange.y);
+        float z = Random.Range(zRange.x, zRange.y);
+        return new Vector3(x, 0, z);
     }
 
     IEnumerator Wander()

@@ -3,17 +3,10 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public float MoveSpeed;
-    public float WalkSpeed = 8f;
-    public float SprintSpeed = 10f;
-    public float JumpForce = 5f;
 
     private TimeRewinder _timeRewinder;
     private Animator _anim;
     private Camera _camera;
-
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
 
     void Start()
     {

@@ -10,8 +10,6 @@ public class TimeRewinder : MonoBehaviour
     public bool IsRewinding = false;
     public float RecordTime = 3f;
     public bool IsNpc = false;
-    public float recordInterval = 0.5f; // Kayıt aralığı
-    public float lastRecordTime = 0; // Son kayıt zamanı
     Animator _anim;
     public List<Point> _points;
     Rigidbody _rb;
@@ -54,6 +52,9 @@ public class TimeRewinder : MonoBehaviour
 
     public void StartRewind()
     {
+        Debug.Log(Time.timeScale);
+        Time.timeScale = 1;
+        Debug.Log(Time.timeScale);
         IsRewinding = true;
         _rb.isKinematic = true;
         _anim.SetBool("IsReverse", true);
@@ -80,6 +81,14 @@ public class TimeRewinder : MonoBehaviour
                 GetComponent<NPCState>().Rewind();
             }
 
+            var rewindSound = GameObject.Find("RewindSound");
+            if(rewindSound == null)
+            {
+                SoundManager.Instance.PlaySound(SoundManager.Instance.RewindSound, "RewindSound", 0.1f);
+            }
+
+            UIManager.Instance.ClosePanel(UIManager.Instance.FailedMissionPanel);
+
             _points.RemoveAt(0);
         }
         else
@@ -90,6 +99,12 @@ public class TimeRewinder : MonoBehaviour
 
     void Record()
     {
+        var rewindSound = GameObject.Find("RewindSound");
+        if(rewindSound != null)
+        {
+           Destroy(rewindSound);
+        }
+
         if (_points.Count > Mathf.Round(RecordTime / Time.fixedDeltaTime))
         {
             _points.RemoveAt(_points.Count - 1);
@@ -98,6 +113,10 @@ public class TimeRewinder : MonoBehaviour
         
         if(IsNpc)
         {
+            if(Time.timeScale < 0.11f)
+            {
+                return;
+            }
             _points.Insert(0, new Point(transform.position, transform.rotation, _navMeshAgent.velocity.magnitude));
         }
         else
